@@ -1,0 +1,19 @@
+<script is:inline>
+  (() => {
+    const KEY = 'myeongdong-consent-v1';
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (!saved || saved.analytics !== true) return;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
+      document.head.appendChild(s);
+    } catch (_) {
+      // 동의 정보가 손상된 경우 분석 스크립트를 로드하지 않습니다.
+    }
+  })();
+</script>

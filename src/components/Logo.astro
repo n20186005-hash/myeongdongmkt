@@ -1,0 +1,18 @@
+---
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+<a href="/" class="logo" aria-label="명동 야시장 관광 가이드 홈">
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <rect width="64" height="64" rx="14" fill="#0b0a16"/>
+    <path d="M12 22h40l-4-10H16z" fill="#ff3da7"/>
+    <path d="M16 26v25h32V26" fill="none" stroke="#f8f4ff" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M23 35h18M23 43h18" stroke="#46e6e1" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="50" cy="14" r="4" fill="#ffd166"/>
+  </svg>
+  {!compact && <span><b>명동 야시장</b><small>비영리 관광 가이드</small></span>}
+</a>
+
+<style>
+  .logo{display:inline-flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit}.logo svg{width:2.7rem;height:2.7rem;filter:drop-shadow(0 0 13px rgba(255,61,167,.3))}.logo span{display:flex;flex-direction:column;line-height:1.05}.logo b{font-size:1rem;letter-spacing:-.02em}.logo small{margin-top:.32rem;color:#a9a4b8;font-size:.68rem;font-weight:700;letter-spacing:.08em}
+</style>

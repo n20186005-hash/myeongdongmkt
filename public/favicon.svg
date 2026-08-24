@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="명동 야시장">
+  <rect width="64" height="64" rx="14" fill="#0b0a16"/>
+  <path d="M12 22h40l-4-10H16z" fill="#ff3da7"/>
+  <path d="M16 26v25h32V26" fill="none" stroke="#f8f4ff" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M23 35h18M23 43h18" stroke="#46e6e1" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="50" cy="14" r="4" fill="#ffd166"/>
+</svg>

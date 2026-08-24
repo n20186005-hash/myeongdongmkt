@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --ink: #0b0a16;
+  --ink-2: #11101e;
+  --paper: #f8f4ff;
+  --muted: #b7b1c7;
+  --pink: #ff3da7;
+  --cyan: #46e6e1;
+  --amber: #ffd166;
+  --line: rgba(255,255,255,.12);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--ink); }
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(255,61,167,.12), transparent 25rem),
+    radial-gradient(circle at 85% 28%, rgba(70,230,225,.08), transparent 28rem),
+    var(--ink);
+  color: var(--paper);
+  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+::selection { background: var(--pink); color: white; }
+
+.skip-link { position: fixed; left: 1rem; top: -4rem; z-index: 100; padding: .65rem 1rem; background: white; color: #111; border-radius: 999px; transition: top .2s; }
+.skip-link:focus { top: 1rem; }
+
+.site-header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(11,10,22,.82); backdrop-filter: blur(18px); }
+.header-row { min-height: 4.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; }
+.main-nav { display: flex; align-items: center; gap: 1.15rem; color: #d7d3e0; font-size: .84rem; font-weight: 800; }
+.main-nav a { text-decoration: none; }
+.main-nav a:hover { color: var(--cyan); }
+.header-cta { display: inline-flex; align-items: center; gap: .5rem; padding: .55rem .85rem; border: 1px solid rgba(70,230,225,.35); border-radius: 999px; color: var(--cyan); }
+
+.section { padding: 6rem 0; }
+.section-tight { padding: 4rem 0; }
+.eyebrow { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: .9rem; color: var(--cyan); font-size: .77rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.eyebrow::before { content: ""; width: 1.8rem; height: 2px; background: currentColor; box-shadow: 0 0 10px currentColor; }
+.display { margin: 0; font-size: clamp(2.2rem, 5.3vw, 5.6rem); line-height: .98; letter-spacing: -.055em; font-weight: 950; }
+.section-title { margin: 0; font-size: clamp(2rem, 3.5vw, 3.8rem); line-height: 1.1; letter-spacing: -.045em; font-weight: 950; }
+.lead { max-width: 46rem; color: #c9c4d4; font-size: clamp(1rem, 1.5vw, 1.2rem); }
+.note { color: #aaa4b8; font-size: .88rem; }
+
+.neon-card { border: 1px solid var(--line); background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.028)); border-radius: 1.5rem; box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+.pill { display:inline-flex; align-items:center; gap:.45rem; padding:.45rem .7rem; border:1px solid var(--line); border-radius:999px; color:#ddd8e8; font-size:.78rem; font-weight:800; background:rgba(255,255,255,.04); }
+.dot { width:.42rem; height:.42rem; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px var(--cyan); }
+
+.prose-page { padding: 5rem 0 7rem; }
+.prose-page .page-shell { max-width: 58rem; }
+.prose-page h1 { margin:0 0 1rem; font-size:clamp(2.3rem,5vw,4.5rem); line-height:1.05; letter-spacing:-.05em; }
+.prose-page h2 { margin:3.2rem 0 .9rem; font-size:1.65rem; letter-spacing:-.025em; }
+.prose-page h3 { margin:2rem 0 .6rem; font-size:1.15rem; }
+.prose-page p, .prose-page li { color:#cbc6d7; }
+.prose-page ul { padding-left:1.2rem; }
+.prose-page .legal-meta { color:var(--cyan); font-weight:800; }
+.prose-page .legal-box { margin:2rem 0; padding:1.2rem 1.35rem; border:1px solid rgba(70,230,225,.26); border-radius:1rem; background:rgba(70,230,225,.06); }
+
+.site-footer { border-top: 1px solid var(--line); padding: 3.5rem 0 2.5rem; background:#080712; }
+.footer-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:3rem; }
+.footer-links { display:flex; flex-wrap:wrap; gap:.6rem 1.2rem; font-size:.86rem; font-weight:800; }
+.footer-links a { color:#d5d0dd; }
+.footer-copy { color:#8f899d; font-size:.78rem; line-height:1.75; }
+
+@media (max-width: 860px) {
+  .main-nav { display:none; }
+  .section { padding:4.5rem 0; }
+  .footer-grid { grid-template-columns:1fr; gap:2rem; }
+}

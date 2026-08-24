@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
+const imageUrl = Astro.site ? new URL('/images/myeongdong-night-1.webp', Astro.site).href : undefined;
+const address = {
+  '@type': 'PostalAddress',
+  streetAddress: '충무로2가 8-3',
+  addressLocality: '중구',
+  addressRegion: '서울특별시',
+  addressCountry: 'KR',
+};
+const geo = { '@type': 'GeoCoordinates', latitude: 37.563656, longitude: 126.983589 };
+const openingHoursSpecification = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map((dayOfWeek) => ({
+  '@type': 'OpeningHoursSpecification',
+  dayOfWeek,
+  opens: '17:00',
+  closes: '01:00',
+}));
+const rating = { '@type': 'AggregateRating', ratingValue: '4.4', reviewCount: '6802', bestRating: '5' };
+const faqItems = [
+  ['명동 야시장은 입장료가 있나요?', '거리형 야간 장터를 둘러보는 데 별도 입장료는 없습니다. 음식·상품 구매 비용은 각 판매대 또는 매장별로 따로 발생합니다.'],
+  ['언제 가면 좋나요?', '노점이 자리 잡기 시작하는 저녁부터 밤 시간대가 중심입니다. 비교적 여유로운 동선을 원하면 이른 저녁, 활기찬 분위기를 원하면 식사 시간 이후를 고려할 수 있습니다. 운영 규모는 날씨와 현장 상황에 따라 달라질 수 있습니다.'],
+  ['공식 운영시간이 매일 같은가요?', '지도 서비스에는 일반적으로 오후 5시부터 다음 날 오전 1시까지로 안내되지만, 거리 노점은 개별 운영이라 실제 시작·종료 시각과 참여 규모가 달라질 수 있습니다. 중요한 일정은 출발 전 현장·공식 관광 안내를 다시 확인하세요.'],
+  ['현금이 꼭 필요한가요?', '카드나 간편결제를 받는 곳이 많지만 결제 수단은 판매대마다 다릅니다. 소액 결제를 위한 보조 수단을 준비하되, 가격과 결제 가능 여부를 주문 전에 확인하는 편이 안전합니다.'],
+  ['유모차나 휠체어로 이동할 수 있나요?', '명동의 주요 보행 구간은 평탄한 편이지만 저녁에는 보행 밀도가 높고 임시 판매대·대기 줄 때문에 통로 폭이 달라집니다. 접근성 화장실과 엘리베이터는 지하철역·공공시설별로 사전에 확인하는 것이 좋습니다.'],
+  ['비가 오면 야시장도 열리나요?', '노점 중심의 야외 공간이므로 비·강풍·폭염·한파 같은 기상 조건에 따라 판매대 수와 운영 시간이 크게 달라질 수 있습니다. 우천 시에는 미끄러운 노면과 우산으로 인한 시야 제한에도 주의하세요.'],
+  ['아이와 방문해도 괜찮나요?', '가족 방문이 가능하지만 혼잡 시간에는 손을 놓치지 않도록 주의하고, 뜨거운 조리기구와 이동 중 음식 섭취에 특히 유의하는 것이 좋습니다.'],
+  ['명동 야시장과 일반 전통시장은 어떻게 다른가요?', '명동 야시장은 하나의 실내 시장 건물보다 명동 보행 상권의 저녁 노점과 거리 음식 경험을 가리키는 성격이 강합니다. 따라서 판매 위치와 구성은 고정 상설시장보다 유동적입니다.'],
+];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'TouristAttraction',
+      name: '명동 야시장',
+      alternateName: '명동 밤거리 노점',
+      description: '서울 중구 명동 보행 상권에서 저녁 시간에 형성되는 거리 음식과 야간 쇼핑 중심의 방문지 안내.',
+      address,
+      geo,
+      isAccessibleForFree: true,
+      openingHoursSpecification,
+      aggregateRating: rating,
+      ...(pageUrl ? { url: pageUrl } : {}),
+      ...(imageUrl ? { image: imageUrl } : {}),
+    },
+    {
+      '@type': 'LocalBusiness',
+      name: '명동 야시장',
+      description: '명동 일대의 거리형 야간 장터를 나타내는 위치 정보.',
+      address,
+      geo,
+      openingHoursSpecification,
+      aggregateRating: rating,
+      priceRange: '무료 입장 · 구매별 상이',
+      ...(pageUrl ? { url: pageUrl } : {}),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map(([name, text]) => ({
+        '@type': 'Question', name,
+        acceptedAnswer: { '@type': 'Answer', text },
+      })),
+    },
+  ],
+};
+---
+<BaseLayout
+  title="명동 야시장 관광 가이드 | 서울 중구의 밤거리와 방문 정보"
+  description="명동 야시장의 역사적 배경, 거리 음식, 운영 참고시간, 교통, 주차, 화장실, 주변 명소와 방문 팁을 공공 자료와 현장 위치 정보를 바탕으로 정리한 비영리 관광 가이드입니다."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="relative min-h-[82vh] overflow-hidden border-b border-white/10">
+    <img src="/images/myeongdong-night-1.webp" width="2200" height="1650" alt="저녁 명동 거리의 야시장 노점과 보행자" class="absolute inset-0 h-full w-full object-cover" fetchpriority="high" />
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,6,16,.96)_0%,rgba(7,6,16,.76)_42%,rgba(7,6,16,.18)_78%),linear-gradient(0deg,rgba(7,6,16,.9)_0%,transparent_42%)]"></div>
+    <div aria-hidden="true" class="absolute -left-24 top-28 h-48 w-48 rounded-full bg-[#ff3da7]/30 blur-3xl"></div>
+    <div aria-hidden="true" class="absolute right-10 top-20 h-40 w-40 rounded-full bg-[#46e6e1]/20 blur-3xl"></div>
+    <div class="relative mx-auto flex min-h-[82vh] max-w-7xl items-end px-5 pb-14 pt-28 md:px-8 md:pb-20">
+      <div class="max-w-4xl">
+        <div class="mb-5 flex flex-wrap gap-2">
+          <span class="pill"><span class="dot"></span>서울특별시 중구</span>
+          <span class="pill">거리형 야간 장터</span>
+          <span class="pill">무료 입장</span>
+        </div>
+        <p class="eyebrow">서울의 밤거리</p>
+        <h1 class="display">명동의 밤은<br/><span class="text-[#ff3da7] drop-shadow-[0_0_24px_rgba(255,61,167,.35)]">거리에서</span> 시작된다</h1>
+        <p class="lead mt-6">간판 불빛과 보행자의 흐름 사이로 작은 조리대가 이어지는 명동의 저녁. 이곳은 하나의 닫힌 시장 건물보다, 서울 대표 상업지의 거리 위에 밤마다 형성되는 유동적인 야간 풍경에 가깝습니다.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#visit" class="rounded-full bg-[#f8f4ff] px-5 py-3 text-sm font-black text-[#0b0a16] no-underline transition hover:scale-[1.02]">방문 정보 확인</a>
+          <a href="#transport" class="rounded-full border border-white/20 bg-black/20 px-5 py-3 text-sm font-black no-underline backdrop-blur hover:border-[#46e6e1]/60 hover:text-[#46e6e1]">가는 방법</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-b border-white/10 bg-[#0e0d1a]">
+    <div class="mx-auto grid max-w-7xl grid-cols-2 md:grid-cols-4">
+      <div class="border-r border-white/10 p-5 md:p-7"><p class="text-xs font-black tracking-[.12em] text-[#8f899d]">입장</p><p class="mt-2 text-xl font-black">무료</p><p class="note mt-1">구매 비용은 별도</p></div>
+      <div class="border-r border-white/10 p-5 md:p-7"><p class="text-xs font-black tracking-[.12em] text-[#8f899d]">운영 참고</p><p class="mt-2 text-xl font-black">17:00–01:00</p><p class="note mt-1">노점별 변동 가능</p></div>
+      <div class="border-r border-white/10 p-5 md:p-7"><p class="text-xs font-black tracking-[.12em] text-[#8f899d]">지도 평점</p><p class="mt-2 text-xl font-black">4.4 / 5</p><p class="note mt-1">지도 서비스 집계 참고</p></div>
+      <div class="p-5 md:p-7"><p class="text-xs font-black tracking-[.12em] text-[#8f899d]">대표 위치</p><p class="mt-2 text-xl font-black">충무로2가 8-3</p><p class="note mt-1">명동 보행 상권</p></div>
+    </div>
+  </section>
+
+  <section id="story" class="section">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-start">
+        <div class="lg:sticky lg:top-28">
+          <p class="eyebrow">장소를 이해하는 법</p>
+          <h2 class="section-title">야시장보다 먼저,<br/>명동이라는 도시의 층위</h2>
+          <p class="lead mt-5">오늘의 밤거리는 갑자기 생긴 관광 장치가 아닙니다. 조선시대 지명에서 근대 상업지, 전후 문화예술의 중심, 현대의 패션·관광 거리로 이어진 명동의 도시사가 그 바탕입니다.</p>
+        </div>
+        <div class="space-y-5">
+          <article class="neon-card p-6 md:p-8"><div class="flex gap-5"><span class="text-sm font-black text-[#46e6e1]">01</span><div><h3 class="text-xl font-black">명례방에서 ‘명동’으로</h3><p class="mt-3 text-[#bcb6c9]">명동 일대는 조선시대 한성부 남부의 명례방과 연결되는 지역입니다. ‘명동’이라는 이름은 이 옛 지명의 계보를 잇습니다. 현재 행정동 명동에는 명동뿐 아니라 충무로1·2가 등 주변 지역이 함께 포함됩니다.</p></div></div></article>
+          <article class="neon-card p-6 md:p-8"><div class="flex gap-5"><span class="text-sm font-black text-[#ff3da7]">02</span><div><h3 class="text-xl font-black">상업지로 바뀐 도심</h3><p class="mt-3 text-[#bcb6c9]">근대 도시화와 함께 이 일대는 상점과 금융·상업 기능이 밀집한 도심으로 변화했습니다. 해방 이후에는 극장, 다방, 화랑과 문화인이 모이며 상업과 예술이 겹치는 서울의 대표적인 거리로 자리 잡았습니다.</p></div></div></article>
+          <article class="neon-card p-6 md:p-8"><div class="flex gap-5"><span class="text-sm font-black text-[#ffd166]">03</span><div><h3 class="text-xl font-black">패션과 보행의 거리</h3><p class="mt-3 text-[#bcb6c9]">1970년대 이후 명동은 패션과 소비문화의 상징성이 강해졌고, 오늘날에는 국내외 방문객이 밀집하는 관광특구의 핵심 구역입니다. 지하철역 사이로 이어지는 보행 상권 자체가 하나의 관광 경험을 만듭니다.</p></div></div></article>
+          <article class="neon-card p-6 md:p-8"><div class="flex gap-5"><span class="text-sm font-black text-[#46e6e1]">04</span><div><h3 class="text-xl font-black">오늘의 ‘야시장’</h3><p class="mt-3 text-[#bcb6c9]">명동 야시장은 전통시장처럼 고정된 단일 건물이나 동일한 상인 구성을 뜻하기보다, 저녁에 보행 거리 곳곳에 형성되는 노점·거리 음식 풍경을 가리키는 표현에 가깝습니다. 따라서 정확한 노점 수, 메뉴, 시작 시각은 날씨와 현장 운영에 따라 달라집니다.</p></div></div></article>
+        </div>
+      </div>
+      <div class="mt-14 grid gap-4 md:grid-cols-3">
+        <figure class="overflow-hidden rounded-3xl border border-white/10 md:col-span-2"><img src="/images/myeongdong-night-2.webp" width="1600" height="1200" loading="lazy" alt="명동 야시장 거리와 이어진 노점 풍경" class="h-full min-h-80 w-full object-cover"/><figcaption class="sr-only">명동의 저녁 거리</figcaption></figure>
+        <div class="neon-card flex flex-col justify-between p-7"><div><p class="eyebrow">이름에 담긴 이야기</p><h3 class="text-2xl font-black tracking-[-.03em]">검증되지 않은 전설보다 도시의 기록을</h3><p class="mt-4 text-sm text-[#b9b3c5]">명동 야시장 자체에 오래된 설화가 전해진다고 단정할 근거는 확인하기 어렵습니다. 대신 명례방에서 현대 명동까지 이어진 지명과 도심 변화가 이 장소를 이해하는 더 신뢰할 수 있는 이야기입니다.</p></div><p class="note mt-8">이 사이트는 확인 가능한 공공·문화사 자료와 현장 위치 자료를 구분해 설명합니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-[#f2edf8] text-[#151221]">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="max-w-3xl"><p class="eyebrow !text-[#8b2871]">거리 음식 읽기</p><h2 class="section-title">무엇을 먹을지보다<br/>어떻게 고를지</h2><p class="mt-5 text-lg text-[#5f5969]">비영리 정보 사이트의 원칙에 따라 특정 판매자나 상호를 추천하지 않습니다. 대신 명동 거리에서 흔히 만나는 음식 유형과 선택 기준을 안내합니다.</p></div>
+      <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <article class="rounded-3xl bg-white p-6 shadow-[0_12px_40px_rgba(29,18,38,.07)]"><span class="text-3xl">♨</span><h3 class="mt-5 text-xl font-black">따뜻한 간식류</h3><p class="mt-3 text-sm text-[#6e6874]">떡·어묵·만두·호떡처럼 바로 조리해 먹는 간식은 온도와 조리대 위생 상태, 알레르기 재료 표시를 함께 확인하세요.</p></article>
+        <article class="rounded-3xl bg-white p-6 shadow-[0_12px_40px_rgba(29,18,38,.07)]"><span class="text-3xl">▤</span><h3 class="mt-5 text-xl font-black">구이·튀김류</h3><p class="mt-3 text-sm text-[#6e6874]">육류·해산물·꼬치·튀김류는 완전히 익었는지 확인하고, 매우 혼잡한 곳에서는 뜨거운 용기와 기름을 들고 이동하지 않는 편이 좋습니다.</p></article>
+        <article class="rounded-3xl bg-white p-6 shadow-[0_12px_40px_rgba(29,18,38,.07)]"><span class="text-3xl">✦</span><h3 class="mt-5 text-xl font-black">디저트·과일</h3><p class="mt-3 text-sm text-[#6e6874]">과일, 아이스크림, 구운 디저트 등은 표시 가격과 1회 제공량을 먼저 확인하면 비교가 쉽습니다.</p></article>
+        <article class="rounded-3xl bg-white p-6 shadow-[0_12px_40px_rgba(29,18,38,.07)]"><span class="text-3xl">◌</span><h3 class="mt-5 text-xl font-black">음료류</h3><p class="mt-3 text-sm text-[#6e6874]">생과일 음료·차·커피류는 얼음과 당도, 일회용 포장 여부를 주문 전에 확인하고 쓰레기는 지정된 수거 지점에 버리세요.</p></article>
+      </div>
+      <div class="mt-8 rounded-3xl border border-[#d8cfdf] bg-[#e8e1ed] p-6 md:flex md:items-center md:justify-between md:gap-8"><p class="font-black">주변에서 식사를 더 하고 싶다면</p><p class="mt-2 max-w-3xl text-sm text-[#645d6b] md:mt-0">한식 백반·국물요리·면요리·분식·구이류·카페·디저트·푸드코트 같은 <b>업종 유형</b>을 기준으로 찾고, 메뉴판의 가격·원산지·알레르기 표시와 영업 상태를 직접 확인하는 방식을 권합니다.</p></div>
+    </div>
+  </section>
+
+  <section id="visit" class="section">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.25fr]">
+        <div><p class="eyebrow">방문 계획</p><h2 class="section-title">도착하기 전에<br/>알아둘 것</h2><p class="lead mt-5">거리형 야시장에는 ‘매표소’나 모든 노점에 공통으로 적용되는 고정 운영표가 없습니다. 시간과 비용을 범위로 이해하면 계획이 더 정확해집니다.</p></div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <article class="neon-card p-6"><p class="text-xs font-black tracking-[.12em] text-[#ff3da7]">입장료 / 비용</p><h3 class="mt-3 text-2xl font-black">거리 입장 무료</h3><p class="mt-3 text-sm text-[#bcb6c9]">명동 보행 거리와 야시장 구역을 둘러보는 데 입장권은 없습니다. 음식·상품·체험 구매 금액은 판매자별로 다릅니다. 주문 전 가격과 수량을 확인하세요.</p></article>
+          <article class="neon-card p-6"><p class="text-xs font-black tracking-[.12em] text-[#46e6e1]">운영 참고시간</p><h3 class="mt-3 text-2xl font-black">17:00–01:00</h3><p class="mt-3 text-sm text-[#bcb6c9]">지도 서비스의 일반 안내값입니다. 노점별 실제 운영은 날씨, 요일, 행사와 현장 상황에 따라 더 늦게 시작하거나 일찍 끝날 수 있습니다.</p></article>
+          <article class="neon-card p-6"><p class="text-xs font-black tracking-[.12em] text-[#ffd166]">추천 시간대</p><h3 class="mt-3 text-2xl font-black">이른 저녁 또는 밤</h3><p class="mt-3 text-sm text-[#bcb6c9]">동선을 천천히 보고 싶다면 노점이 준비되는 이른 저녁, 명동의 야간 분위기를 우선한다면 식사 시간 이후가 어울립니다. 주말·휴일은 보행 여유가 줄 수 있습니다.</p></article>
+          <article class="neon-card p-6"><p class="text-xs font-black tracking-[.12em] text-[#ff3da7]">권장 체류</p><h3 class="mt-3 text-2xl font-black">약 1–2시간</h3><p class="mt-3 text-sm text-[#bcb6c9]">거리 음식과 중심 보행 구간만 둘러보는 기준입니다. 쇼핑, 식사, 성당이나 남산 등 주변 명소를 함께 보면 반나절 일정으로 확장할 수 있습니다.</p></article>
+        </div>
+      </div>
+
+      <div class="mt-12 grid gap-4 lg:grid-cols-3">
+        <div class="neon-card p-6 lg:col-span-2"><h3 class="text-xl font-black">현장 이용 체크</h3><div class="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+          <div><p class="font-black text-[#46e6e1]">화장실</p><p class="note mt-1">지하철역, 공공시설, 대형 상업시설의 화장실을 이용할 수 있습니다. 개방 시간과 장애인 화장실 위치는 시설마다 다릅니다.</p></div>
+          <div><p class="font-black text-[#46e6e1]">결제</p><p class="note mt-1">카드·간편결제·현금 수용 여부가 노점별로 다를 수 있으므로 주문 전에 확인하세요. 공개된 가격 표시도 함께 확인하는 것이 좋습니다.</p></div>
+          <div><p class="font-black text-[#46e6e1]">쓰레기</p><p class="note mt-1">임의 투기를 피하고 현장 수거함이나 안내된 배출 지점을 이용하세요. 수거 지점은 행사·시간대에 따라 달라질 수 있습니다.</p></div>
+          <div><p class="font-black text-[#46e6e1]">접근성</p><p class="note mt-1">주요 도로는 보행 중심이지만 노점과 대기 줄로 통로가 좁아질 수 있습니다. 지하철 엘리베이터 출구를 미리 확인하면 이동이 수월합니다.</p></div>
+        </div></div>
+        <div class="overflow-hidden rounded-3xl border border-white/10"><img src="/images/myeongdong-night-3.webp" width="1600" height="1200" loading="lazy" alt="명동 야시장 노점 앞에서 음식을 고르는 방문객" class="h-full min-h-72 w-full object-cover"/></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="transport" class="section border-y border-white/10 bg-[#0f0d1c]">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="max-w-3xl"><p class="eyebrow">상세 교통</p><h2 class="section-title">차보다 지하철,<br/>마지막은 걸어서</h2><p class="lead mt-5">명동 중심부는 보행량이 많고 차량 진입이 느려질 수 있습니다. 대중교통으로 가장자리까지 이동한 뒤 짧게 걷는 방식이 일반적으로 단순합니다.</p></div>
+      <div class="mt-10 grid gap-4 md:grid-cols-2">
+        <article class="neon-card p-6 md:p-7"><div class="flex items-center justify-between gap-4"><h3 class="text-xl font-black">인천국제공항에서</h3><span class="pill">공항철도 · 버스 · 택시</span></div><p class="mt-4 text-sm text-[#bcb6c9]">공항철도로 서울역까지 이동한 뒤 지하철 4호선으로 환승해 명동역에서 내리는 경로가 이해하기 쉽습니다. 공항버스는 명동권 정류장 운행 여부와 노선을 출발 당일 확인하세요. 택시는 짐이 많을 때 편하지만 도심 정체와 시간대별 요금 차이를 고려해야 합니다.</p></article>
+        <article class="neon-card p-6 md:p-7"><div class="flex items-center justify-between gap-4"><h3 class="text-xl font-black">김포국제공항에서</h3><span class="pill">도시철도 · 택시</span></div><p class="mt-4 text-sm text-[#bcb6c9]">공항철도 또는 지하철을 이용해 서울 도심으로 들어온 뒤 4호선 명동역이나 2호선 을지로입구역 방향으로 환승할 수 있습니다. 환승 횟수와 엘리베이터 동선은 짐의 양에 맞춰 선택하세요.</p></article>
+        <article class="neon-card p-6 md:p-7"><div class="flex items-center justify-between gap-4"><h3 class="text-xl font-black">지하철 · 시내버스</h3><span class="pill">가장 권장</span></div><p class="mt-4 text-sm text-[#bcb6c9]"><b class="text-white">4호선 명동역</b>이 가장 대표적인 접근 지점이며, <b class="text-white">2호선 을지로입구역</b>에서도 명동 보행 상권으로 들어올 수 있습니다. 시내버스는 퇴계로·을지로·남대문로 주변 정류장을 활용한 뒤 도보로 이동하는 방식이 좋습니다. 버스 노선은 개편될 수 있으므로 서울 대중교통 실시간 정보를 확인하세요.</p></article>
+        <article class="neon-card p-6 md:p-7"><div class="flex items-center justify-between gap-4"><h3 class="text-xl font-black">택시 · 승하차</h3><span class="pill">보행 구간 주의</span></div><p class="mt-4 text-sm text-[#bcb6c9]">목적지를 ‘명동역’ 또는 명동길 진입부로 설명하면 이해하기 쉽습니다. 중심 보행 구간에는 차량이 바로 들어가기 어렵거나 혼잡할 수 있어, 큰 도로에서 내려 마지막 구간을 걷는 상황을 예상하세요.</p></article>
+      </div>
+      <div class="mt-5 rounded-3xl border border-[#ffd166]/20 bg-[#ffd166]/[.06] p-6"><p class="font-black text-[#ffd166]">교통 약자를 위한 팁</p><p class="mt-2 text-sm text-[#c9c4d4]">지하철역의 엘리베이터 운행 위치와 저상버스 도착 정보를 출발 전에 확인하고, 혼잡이 적은 이른 시간대를 선택하세요. 보행로 위 임시 노점과 대기 줄은 현장에 따라 이동 공간을 좁힐 수 있습니다.</p></div>
+    </div>
+  </section>
+
+  <section id="map" class="section-tight">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p class="eyebrow">현장 위치</p><h2 class="section-title">명동의 밤 한가운데</h2></div><p class="note max-w-md">지도 표기는 대표 위치를 기준으로 하며, 노점은 명동 보행 거리 여러 구간에 유동적으로 배치될 수 있습니다.</p></div>
+      <div class="overflow-hidden rounded-[2rem] border border-white/10 bg-[#11101e] shadow-2xl">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m5!3m3!1m2!1s0x357ca2f07ba7bfa9%3A0x738decadf187ec47!2z5piO5rSe5aSc5biC!5e1!3m2!1sko!2skr!4v1787535537572!5m2!1sko!2skr" width="600" height="520" style="border:0;width:100%;display:block;" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="명동 야시장 구글 지도"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-y border-white/10 bg-[#0f0d1c]">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p class="eyebrow">실용 정보</p><h2 class="section-title">먹고 보는 것 밖의<br/>여행 준비</h2></div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <article class="neon-card p-5"><h3 class="font-black">주차</h3><p class="note mt-2">명동 핵심 보행 구간은 주차 공간이 제한적입니다. 주변 공영주차장 또는 상업시설 부설 주차장 유형을 이용하되, 실시간 만차 여부와 요금을 확인하세요. 대중교통 이용을 우선 권합니다.</p></article>
+          <article class="neon-card p-5"><h3 class="font-black">숙박</h3><p class="note mt-2">명동·을지로·충무로 일대에는 비즈니스호텔, 중급호텔, 게스트하우스, 레지던스형 숙박 등 다양한 유형이 있습니다. 특정 업소를 추천하지 않으며 교통·소음·취소 조건으로 비교하세요.</p></article>
+          <article class="neon-card p-5"><h3 class="font-black">생필품 · 식료품</h3><p class="note mt-2">편의점, 소형 슈퍼마켓, 식품관 유형의 시설을 찾기 쉽습니다. 늦은 시간에는 영업 종료 여부가 시설마다 다르므로 현장 표시를 확인하세요.</p></article>
+          <article class="neon-card p-5"><h3 class="font-black">주유 · 전기차 충전</h3><p class="note mt-2">보행 중심부 안에서는 주유소가 드뭅니다. 큰 간선도로 방향에서 주유소를 찾고, 전기차 충전은 공영주차장·대형 건물 주차장 유형의 충전시설을 실시간 지도에서 확인하는 편이 좋습니다.</p></article>
+          <article class="neon-card p-5"><h3 class="font-black">날씨 대비</h3><p class="note mt-2">야외 노점이 중심이므로 우천·강풍·폭염·한파가 체감과 운영 규모에 직접 영향을 줍니다. 여름에는 수분 보충, 겨울에는 장시간 대기 대비가 중요합니다.</p></article>
+          <article class="neon-card p-5"><h3 class="font-black">안전 · 소지품</h3><p class="note mt-2">혼잡한 보행 구간에서는 가방과 휴대전화를 몸 가까이 두고, 도로를 건널 때는 음식 촬영보다 신호와 차량을 먼저 확인하세요. 긴급 상황에서는 국내 긴급번호와 가까운 공공기관 안내를 이용하세요.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="nearby" class="section bg-[#f2edf8] text-[#151221]">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <p class="eyebrow !text-[#8b2871]">주변 명소</p><h2 class="section-title">명동에서 이어지는<br/>서울 도심 산책</h2>
+      <div class="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <article class="rounded-3xl border border-[#ddd4e2] bg-white p-6"><p class="text-xs font-black text-[#8b2871]">역사 · 건축</p><h3 class="mt-2 text-xl font-black">명동성당</h3><p class="mt-3 text-sm text-[#6e6874]">명동 동쪽의 대표적인 역사 건축물입니다. 종교시설이므로 예배와 행사 시간을 존중하고 정숙하게 관람하세요.</p></article>
+        <article class="rounded-3xl border border-[#ddd4e2] bg-white p-6"><p class="text-xs font-black text-[#8b2871]">도시 전망</p><h3 class="mt-2 text-xl font-black">남산 · 서울타워 권역</h3><p class="mt-3 text-sm text-[#6e6874]">명동 남쪽에서 이어지는 남산권은 저녁 산책과 도심 전망을 연결하기 좋습니다. 오르막과 이동 수단 운영시간을 고려하세요.</p></article>
+        <article class="rounded-3xl border border-[#ddd4e2] bg-white p-6"><p class="text-xs font-black text-[#8b2871]">시장 문화</p><h3 class="mt-2 text-xl font-black">남대문시장</h3><p class="mt-3 text-sm text-[#6e6874]">명동 서쪽의 전통시장 권역으로, 명동의 현대 상업거리와 다른 시장 구조를 비교해 보기 좋습니다. 점포별 영업시간은 크게 다릅니다.</p></article>
+        <article class="rounded-3xl border border-[#ddd4e2] bg-white p-6"><p class="text-xs font-black text-[#8b2871]">도심 수변</p><h3 class="mt-2 text-xl font-black">청계천</h3><p class="mt-3 text-sm text-[#6e6874]">을지로 방향으로 이동하면 도심 수변 산책로와 연결할 수 있습니다. 야간에는 계단과 젖은 노면에 주의하세요.</p></article>
+      </div>
+      <p class="mt-6 text-sm text-[#77707d]">주변 명소 표기는 상업 추천이 아니라 이동 맥락을 설명하기 위한 공공·관광 장소 안내입니다. 운영시간, 행사, 공사 여부는 각 공식 채널에서 확인하세요.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="grid gap-5 lg:grid-cols-[1.2fr_.8fr]">
+        <figure class="overflow-hidden rounded-[2rem] border border-white/10"><img src="/images/myeongdong-night-4.webp" width="1600" height="1200" loading="lazy" alt="사람들로 활기찬 명동 야시장 거리" class="h-full min-h-[28rem] w-full object-cover"/></figure>
+        <div class="neon-card p-7 md:p-9"><p class="eyebrow">혼잡을 피하는 법</p><h2 class="text-3xl font-black tracking-[-.04em]">한 줄로 걷고,<br/>멈출 땐 가장자리로</h2><ul class="mt-6 space-y-4 text-sm text-[#bcb6c9]"><li>• 사진을 찍거나 메뉴를 볼 때는 보행 흐름 한가운데에 갑자기 멈추지 않습니다.</li><li>• 여러 사람이 함께라면 주문 전 대기 위치를 정해 통로를 막지 않도록 합니다.</li><li>• 뜨거운 음식은 판매대 바로 앞보다 안전한 공간에서 먹습니다.</li><li>• 아이·노약자와 동행할 때는 가장 혼잡한 시간대를 피하는 것이 편합니다.</li><li>• 비 오는 날에는 우산 끝과 미끄러운 바닥을 함께 주의합니다.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section border-t border-white/10 bg-[#0f0d1c]">
+    <div class="mx-auto max-w-5xl px-5 md:px-8">
+      <div class="text-center"><p class="eyebrow">방문 전 확인</p><h2 class="section-title">자주 묻는 질문</h2></div>
+      <div class="mt-10 divide-y divide-white/10 rounded-3xl border border-white/10 bg-white/[.03] px-5 md:px-8">
+        {faqItems.map(([question, answer], i) => (
+          <details class="group py-5" open={i === 0}>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-5 font-black"><span>{question}</span><span class="text-xl text-[#46e6e1] transition group-open:rotate-45">+</span></summary>
+            <p class="mt-3 max-w-3xl text-sm text-[#bcb6c9]">{answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sources" class="section bg-[#080712]">
+    <div class="mx-auto max-w-7xl px-5 md:px-8">
+      <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p class="eyebrow">자료 기준</p><h2 class="section-title">관광 홍보보다<br/>검증 가능한 정보</h2></div>
+        <div class="space-y-5 text-sm text-[#bcb6c9]">
+          <p>이 가이드는 명동 야시장을 단일 사업체의 홍보 페이지처럼 다루지 않습니다. 장소의 역사·행정·관광 맥락은 서울특별시 중구청과 중구 문화관광, 서울관광재단의 비짓서울, 한국관광공사 대한민국 구석구석 등 공공 관광 자료를 우선 참고합니다. 주소·평점·일반 운영시간 같은 위치성 정보는 지도 서비스를 보조 자료로 사용하며, 노점 운영은 유동적이라는 점을 함께 표시합니다.</p>
+          <p>역사 서술은 명동의 옛 지명인 명례방, 근대 상업지 형성, 전후 문화예술 공간, 관광특구로 이어지는 확인 가능한 흐름에 한정했습니다. 특정 야시장에 관한 출처 불명의 전설이나 정확한 연혁은 만들어 넣지 않았습니다.</p>
+          <p>시설·교통 정보는 여행 의사결정에 도움이 되도록 유형 중심으로 설명하며, 특정 식당·호텔·주차장·상점을 광고하거나 순위를 매기지 않습니다. 운영시간, 교통 노선, 요금, 접근성 시설은 바뀔 수 있으므로 중요한 일정은 출발 전에 각 공공기관과 운영 주체의 최신 안내를 다시 확인하세요.</p>
+          <div class="rounded-2xl border border-white/10 p-5"><p class="font-black text-white">현장 사진 출처</p><p class="mt-2 note">명동 야시장 현장 사진 4점: 위키미디어 공용의 Sgroey 촬영, CC BY-SA 4.0. 웹용 크기와 형식으로 변환했으며 사진 내용은 인위적으로 생성하지 않았습니다.</p><div class="mt-3 flex flex-wrap gap-3 text-xs font-bold text-[#46e6e1]"><a href="https://commons.wikimedia.org/wiki/File:Myeongdong_night_market_seoul_1.jpg" rel="license noopener">사진 1 원본</a><a href="https://commons.wikimedia.org/wiki/File:Myeongdong_night_market_seoul_2.jpg" rel="license noopener">사진 2 원본</a><a href="https://commons.wikimedia.org/wiki/File:Myeongdong_night_market_seoul_3.jpg" rel="license noopener">사진 3 원본</a><a href="https://commons.wikimedia.org/wiki/File:Myeongdong_night_market_seoul_4.jpg" rel="license noopener">사진 4 원본</a><a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license noopener">CC BY-SA 4.0</a></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
