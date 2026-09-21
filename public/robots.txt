@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+
+Host: myeongdongmkt.com
+Sitemap: https://myeongdongmkt.com/sitemap-index.xml

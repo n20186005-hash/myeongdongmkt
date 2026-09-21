@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_NAME } from '../data/site';
 
 const pageUrl = Astro.site ? new URL('/', Astro.site).href : undefined;
 const imageUrl = Astro.site ? new URL('/images/myeongdong-night-1.webp', Astro.site).href : undefined;
@@ -66,7 +67,7 @@ const jsonLd = {
 };
 ---
 <BaseLayout
-  title="명동 야시장 관광 가이드 | 서울 중구의 밤거리와 방문 정보"
+  title={`${SITE_NAME} | 서울 중구의 밤거리와 방문 정보`}
   description="명동 야시장의 역사적 배경, 거리 음식, 운영 참고시간, 교통, 주차, 화장실, 주변 명소와 방문 팁을 공공 자료와 현장 위치 정보를 바탕으로 정리한 비영리 관광 가이드입니다."
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

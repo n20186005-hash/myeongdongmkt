@@ -2,8 +2,8 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// 실제 도메인이 정해지면 이 값 하나만 입력하세요. 미설정 상태에서도 정상 빌드됩니다.
-const SITE: string | undefined = undefined;
+// 실제 운영 도메인. 설정하면 canonical·OG 절대 URL·sitemap·JSON-LD url/image가 활성화됩니다.
+const SITE: string = 'https://myeongdongmkt.com';
 
 export default defineConfig({
   site: SITE,

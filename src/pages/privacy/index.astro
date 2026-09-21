@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withSiteName } from '../../data/site';
 ---
-<BaseLayout title="개인정보처리방침 | 명동 야시장 관광 가이드" description="명동 야시장 관광 가이드의 개인정보 수집, 이용, 제3자 서비스, 보관, 이용자 권리와 쿠키에 관한 안내입니다.">
+<BaseLayout title={withSiteName('개인정보처리방침')} description="명동 야시장 관광 가이드의 개인정보 수집, 이용, 제3자 서비스, 보관, 이용자 권리와 쿠키에 관한 안내입니다.">
   <section class="prose-page">
     <div class="page-shell mx-auto px-5 md:px-8">
       <p class="eyebrow">법적 안내</p>
