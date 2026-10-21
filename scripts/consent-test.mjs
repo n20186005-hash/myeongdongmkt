@@ -1,0 +1,39 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+const baseline=process.argv.includes('--baseline');
+const code=baseline?execFileSync('git',['show','82b2fd9:public/js/consent.js'],{encoding:'utf8'}):fs.readFileSync('dist/js/consent.js','utf8');
+const built=fs.readFileSync('dist/cookie-settings/index.html','utf8');
+if(!baseline){assert.equal(code,fs.readFileSync('public/js/consent.js','utf8'));assert(/<html lang="ko">/.test(built));assert(/<script[^>]*src="\/js\/consent.js"[^>]*defer/.test(built));for(const part of ['id="analytics"','id="cookie-settings"','data-cookie-reject','data-consent-status'])assert(built.includes(part));assert(!built.includes('data-cookie-accept'));}
+const KEY='myeongdongmkt_cookie_preferences',DENY='myeongdongmkt_analytics_denied',MARK='|myeongdongmkt-analytics-denied|',GA='ga-disable-G-HXM22WWPKP';
+function store(map=new Map()) {return{map,fail:{},writes:[],getItem(k){if(this.fail.read)throw Error('read');return map.get(k)??null},setItem(k,v){if(this.fail.write)throw Error('write');this.writes.push([k,v]);if(!this.fail.ignoreWrite)map.set(k,v);if(k===KEY&&this.fail.lateRead)this.fail.read=true},removeItem(k){if(this.fail.remove)throw Error('remove');if(!this.fail.ignoreRemove)map.delete(k)}};}
+function page({local=store(),session=store(),name='',nameFail={}}={}) {
+ const scripts=[],listeners={},handlers={},checkbox={checked:false},status={textContent:''},cookies=[];
+ const document={getElementById:id=>id==='analytics'?checkbox:id==='cookie-settings'?{addEventListener:(_type,fn)=>handlers.submit=fn}:null,
+ querySelectorAll:selector=>selector==='[data-cookie-reject]'?[{addEventListener:(_type,fn)=>handlers.reject=fn}]:selector==='[data-consent-status]'?[status]:[],createElement:()=>({}),head:{appendChild:s=>scripts.push(s)}};
+ Object.defineProperty(document,'cookie',{get:()=> '_ga=old; _ga_ABC=old; other=keep',set:v=>cookies.push(v)});
+ const c={document,localStorage:local,sessionStorage:session,location:{hostname:'myeongdongmkt.com'},addEventListener:(type,fn)=>(listeners[type]||=[]).push(fn)};
+ Object.defineProperty(c,'name',{get(){if(nameFail.read)throw Error('name read');return name},set(v){if(nameFail.write)throw Error('name write');if(!nameFail.ignoreWrite)name=v}});
+ c.window=c;vm.createContext(c);const initialize=()=>vm.runInContext(code,c);initialize();
+ return {c,scripts,local,session,nameFail,checkbox,status,cookies,initialize,save(){let prevented=false;handlers.submit({preventDefault(){prevented=true}});assert(prevented)},allow(){checkbox.checked=true;this.save()},deny(){handlers.reject()},event(value,key=KEY){(listeners.storage||[]).forEach(fn=>fn({key,newValue:value}))},reload:()=>page({local,session,name,nameFail}),allowed:()=>c[GA]===false,runtime:()=>c.dataLayer?.filter(a=>a[0]==='consent').at(-1)?.[2].analytics_storage};
+}
+if(baseline){
+ const p=page();p.allow();p.deny();p.allow();assert.equal(p.runtime(),'denied');
+ const local=store(new Map([[KEY,'{"analytics":false}']]));local.fail.read=true;const b=page({local});b.allow();assert.equal(JSON.parse(local.map.get(KEY)).analytics,true);assert.match(b.status.textContent,/허용했습니다/);assert.equal(b.allowed(),false);
+ const s=store(new Map([[DENY,'1']]));s.fail.remove=true;const a=page({session:s});a.allow();assert.equal(JSON.parse(a.local.getItem(KEY)).analytics,true);assert.equal(a.allowed(),false);
+ console.log('BASELINE defects reproduced: regrant retains denied consent; local read-fail/write-ok publishes grant with false allowed message; failed session veto clearance publishes shared grant.');
+ process.exit(0);
+}
+let p=page();assert.equal(p.scripts.length,0);assert.equal(p.checkbox.checked,false);p.save();p.allow();p.save();p.save();assert.equal(p.runtime(),'granted');assert.equal(p.scripts.length,1);assert.equal(p.c.dataLayer.filter(a=>a[0]==='config').length,1);assert.equal(p.c.dataLayer.filter(a=>a[0]==='consent'&&a[1]==='default').length,1);p.deny();assert.equal(p.runtime(),'denied');assert.equal(p.checkbox.checked,false);assert(p.cookies.some(x=>x.startsWith('_ga=')));assert(!p.cookies.some(x=>x.startsWith('other=')));p.save();p.allow();assert.equal(p.runtime(),'granted');assert.equal(p.scripts.length,1);assert.equal(p.c.dataLayer.filter(a=>a[0]==='config').length,1);
+for(const allFail of [false,true]){p=page({local:store(new Map([[KEY,'{"analytics":true}']]))});assert.equal(p.scripts.length,1);p.local.fail.write=true;p.session.fail.write=allFail;p.nameFail.write=allFail;p.deny();assert.equal(p.allowed(),false);assert.equal(p.runtime(),'denied');assert.equal(p.checkbox.checked,false);assert.match(p.status.textContent,allFail?/이 페이지에서/:/이 탭에서/);p.initialize();assert.equal(p.allowed(),false);assert.equal(p.scripts.length,1);if(!allFail)assert.equal(p.reload().scripts.length,0);}
+for(const which of ['local','session']){const local=store(new Map([[KEY,'{"analytics":true}']])),session=store();(which==='local'?local:session).fail.read=true;p=page({local,session});assert.equal(p.scripts.length,0);p.allow();assert.equal(p.allowed(),false);assert.equal(p.checkbox.checked,false);assert.equal(p.scripts.length,0);assert.doesNotMatch(p.status.textContent,/허용했습니다/);}
+const shared=store(new Map([[KEY,'{"analytics":false}']])),bad=store(shared.map);bad.fail.read=true;const healthy=page({local:shared});p=page({local:bad});p.allow();healthy.event(shared.getItem(KEY));assert.equal(JSON.parse(shared.getItem(KEY)).analytics,false);assert.equal(healthy.scripts.length,0);assert.equal(p.checkbox.checked,false);
+for(const failure of ['remove','ignoreRemove']){p=page({local:store(new Map([[KEY,'{"analytics":false}']])),session:store(new Map([[DENY,'1']]))});p.session.fail[failure]=true;p.allow();assert.equal(JSON.parse(p.local.getItem(KEY)).analytics,false);assert.equal(p.allowed(),false);}
+for(const failure of ['write','ignoreWrite','read']){p=page({local:store(new Map([[KEY,'{"analytics":false}']])),name:MARK});p.nameFail[failure]=true;p.allow();assert.equal(JSON.parse(p.local.getItem(KEY)).analytics,false);assert.equal(p.allowed(),false);}
+p=page();p.allow();p.local.fail.write=true;p.session.fail.write=true;p.deny();assert(p.c.name.includes(MARK));p.local.fail.write=false;assert.equal(p.reload().scripts.length,0);
+p=page({local:store(new Map([[KEY,'{"analytics":true}']])),session:store(new Map([[DENY,'1']]))});assert.equal(p.scripts.length,0);
+const late=store();late.fail.lateRead=true;p=page({local:late});p.allow();assert.equal(p.allowed(),false);assert.equal(p.checkbox.checked,false);assert.match(p.status.textContent,/비활성 상태/);assert.doesNotMatch(p.status.textContent,/허용했습니다/);
+const local=store(),a=page({local}),b=page({local});a.allow();b.event(local.getItem(KEY));assert.equal(b.allowed(),true);assert.equal(b.checkbox.checked,true);a.deny();b.event(local.getItem(KEY));assert.equal(b.runtime(),'denied');assert.equal(b.checkbox.checked,false);assert.match(b.status.textContent,/비활성화/);a.allow();b.event(local.getItem(KEY));assert.equal(b.allowed(),false);assert.match(b.status.textContent,/거부는 유지/);b.allow();assert.equal(b.runtime(),'granted');assert.equal(b.scripts.length,1);local.map.clear();b.event(null,null);assert.equal(b.allowed(),false);assert.equal(b.checkbox.checked,false);
+for(const raw of ['broken','null','{"analytics":"true"}'])assert.equal(page({local:store(new Map([[KEY,raw]]))}).scripts.length,0);
+console.log('PASS built Korean deferred runtime and actual form/reject/status callbacks: default denial, repeated saves and single loader/config, existing-grant withdrawal, denial/regrant runtime, cookie deletion, independent local/session read/write failures, read-fail/write-ok no shared grant, session/name retained refusal and failed/ignored clearance, late-read effective feedback, separate-session shared-local cross-tab denial/regrant/clear. No browser claim.');
