@@ -1,76 +1,23 @@
-# 명동 야시장 관광 가이드
+# 명동 야시장 서울 관광 가이드
 
-서울특별시 중구 명동 야시장을 위한 독립 비영리 관광 안내 사이트입니다. 하나의 상설 시장 건물처럼 홍보하지 않고, 명동 보행 상권의 역사와 저녁 노점 풍경을 구분해 설명하며 방문자가 교통·편의·안전 정보를 한 번에 확인할 수 있도록 구성했습니다.
+한국어 독립 방문 안내입니다. 거리 음식 판매대·상가·식당과 별도 시설의 운영 범위를 구분하며 공식 운영자나 정부기관을 대리하지 않습니다.
 
-## 기술 구성
+## 실행
 
-- Astro 7.2.4
-- Tailwind CSS 4.3.3
-- TypeScript 6.0.3
-- pnpm 11.23.0
-- Node.js 24.19.0
-- Cloudflare Workers 정적 자산 배포
-- 데이터베이스, 로그인, CMS 없음
+Node 24.19.0 / pnpm 11.23.0. `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm build`를 실행합니다. 기존 `/`, `/privacy/`, `/terms/`, `/cookie-settings/`를 보존하며 실제 404를 추가합니다. 모든 페이지는 정적 HTML로 출력합니다. 한국어 외 언어를 새로 만들지 않습니다.
 
-모든 직접 의존성은 `package.json`에 정확한 버전으로 고정합니다. Node.js 버전은 `engines`와 `.node-version`, pnpm 버전은 `packageManager`와 `engines`에서 고정합니다. 단일 패키지 프로젝트이므로 `pnpm-workspace.yaml`을 만들지 않습니다.
+확정 도메인은 `https://myeongdongmkt.com/`이며 canonical·OG·ko alternate·홈페이지 sitemap을 생성합니다. Cloudflare 실제 Worker 프로젝트는 `myeongdongmkt`입니다. ASSETS `run_worker_first`가 HTTP/www 301의 경로·쿼리를 보존하고 없는 주소에 실제 404/noindex를 적용합니다. `pnpm deploy`는 빌드 후 게시하므로 권한자가 별도 실행합니다.
 
-## 로컬 실행
+`dist/`는 처음부터 추적하지 않던 빌드 결과로 유지합니다. 모든 원본·공개 자산과 잠금 파일을 제출하며 빌드의 로컬 참조, 원본과 결과의 바이트 일치 및 공개 자산의 커밋 포함을 검증합니다. 이전의 고정 파일 목록 checksum은 갱신되지 않은 전달용 파일이어서 제거합니다.
 
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm check
-pnpm build
-pnpm dev
-```
+## 편집과 사진
 
-## 사이트 도메인 설정
+Visit Seoul의 ‘명동 상권 매일 운영·점포별 시간 상이’ 설명을 거리 노점의 공통 시간표로 옮기지 않습니다. 특정 메뉴·가격·무료 이용·시설 운영·위생·음식 적합성을 보장하지 않습니다. FAQ는 화면과 JSON-LD가 같은 배열에서 생성됩니다. TouristAttraction에는 시간·평가·가격을 넣지 않습니다. [ATTRIBUTIONS.md](ATTRIBUTIONS.md)에 Sgroey의 2024년 사진 원본·CC BY-SA 4.0·사용 범위를 기록하고 화면에도 원본·라이선스·촬영일·변경 사항을 표시합니다.
 
-도메인은 `astro.config.ts`의 `SITE` 한 곳에서만 설정합니다. 도메인이 아직 없으면 `undefined` 상태로 그대로 빌드할 수 있습니다.
+## 개인정보
 
-- `SITE` 미설정: canonical 및 절대 Open Graph URL을 출력하지 않고 sitemap 통합도 활성화하지 않습니다.
-- `SITE` 설정: canonical, Open Graph, JSON-LD 이미지·URL 및 `@astrojs/sitemap`이 모두 같은 설정값에서 파생됩니다.
+Google 지도는 선택해서 여는 외부 링크이며 자동 iframe이 없습니다. Google Analytics는 `/cookie-settings/`의 명시적 허용 후에만 로드합니다. 새 키 `myeongdongmkt_cookie_preferences`는 이전 허용을 가져오지 않습니다. 철회 저장 실패 시 즉시 분석을 끄고 가능한 세션 거부로 같은 탭의 이동·새로고침에 유지합니다. 자동 새로고침하지 않으며 두 저장소 실패 시 현재 페이지에만 적용되는 한계를 한국어로 알립니다. 계정·예약·문의 양식·이메일 창구나 사용하지 않는 환경설정 기능은 없습니다.
 
-도메인을 넣은 뒤 다시 빌드하면 sitemap이 자동 생성됩니다. `lastmod`는 임의로 만들지 않습니다.
+## 날짜 기준 장소 정보
 
-## Cloudflare Workers 배포
-
-`wrangler.jsonc`는 `dist`를 정적 자산 디렉터리로 사용합니다.
-
-```bash
-pnpm deploy
-```
-
-Cloudflare 계정 인증과 실제 Worker 이름/도메인 연결은 배포 계정에서 진행합니다.
-
-## 개인정보와 분석
-
-GA4 측정 ID는 요청된 `G-HXM22WWPKP`를 사용합니다. 분석 스크립트는 사용자가 `/cookie-settings/`에서 분석형 저장에 동의한 경우에만 로드합니다. 개인화 광고용 마케팅 저장은 사용하지 않습니다.
-
-법적 안내는 각각 독립 경로입니다.
-
-- `/privacy/` 개인정보처리방침
-- `/terms/` 서비스 이용약관
-- `/cookie-settings/` 쿠키 설정
-
-## 지도
-
-메인 페이지의 구글 지도 iframe은 대한민국 현지화 매개변수 `ko` / `kr`을 사용합니다. 중국어 지역 매개변수는 포함하지 않습니다.
-
-## 사진과 저작권
-
-메인 페이지의 현장 사진은 실제 명동 야시장 사진이며 사이트 내부 `public/images/`에 저장했습니다. 원본은 위키미디어 공용의 Sgroey 촬영 사진이며 CC BY-SA 4.0 조건을 따릅니다. 자세한 원본 링크와 표시 정보는 메인 페이지의 `자료 기준` 영역과 `ATTRIBUTIONS.md`에서 확인할 수 있습니다.
-
-## 배포 전 점검
-
-권장 최종 점검 순서:
-
-```bash
-rm -rf node_modules dist
-CI=1 corepack pnpm install --frozen-lockfile
-pnpm check
-pnpm build
-grep -RniE 'example\\.com|localhost|chrome-extension://' dist || true
-```
-
-실제 도메인을 `SITE`에 넣은 빌드에서는 생성된 sitemap의 모든 URL이 같은 실제 도메인에서 파생되는지 추가 확인합니다.
+2026.10.20 Google Maps 야시장 listing의 17:00–다음 날 01:00, 평점·리뷰 수와 충무로2가 8-3·37.5616685,126.9858438 핀을 출처와 함께 표시합니다. 이는 Visit Seoul의 더 넓은 명동 상권 참고 주소(명동8길 27)와 점포별 시간 안내를 대체하지 않습니다. 조건 없는 운영시간·평가 schema로 옮기지 않으며 사진 촬영 좌표를 장소 pin으로 사용하지 않습니다.
