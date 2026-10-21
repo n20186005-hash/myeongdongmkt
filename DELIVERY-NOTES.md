@@ -1,20 +1,7 @@
-# 交付说明
+# 로컬 검증 범위
 
-本压缩包包含当前已生成的完整网站项目文件，包括：
+기존 한국어 4개 경로와 404의 정적 HTML, 제목·description·canonical·OG·ko alternate·홈페이지 sitemap 및 로컬 링크·이미지를 검사합니다. FAQ는 보이는 질문·답변과 JSON-LD가 동일해야 합니다. 상권·노점·점포별 정보 범위를 구분하며 조건 없는 시간·평가·무료 schema를 쓰지 않습니다.
 
-- Astro + Tailwind CSS + TypeScript 源码
-- 首页与独立的 Privacy / Terms / Cookie Settings 页面
-- Cloudflare Workers 配置
-- Logo / favicon / Apple Touch Icon
-- 4 组明洞夜市真实照片：JPG 原图 + WebP 页面优化版
-- 图片授权与来源说明
-- Node / pnpm / package 精确版本配置
-- README 与部署说明
+Worker의 HTTP/www 경로·쿼리 보존 301과 실제 404/noindex, 분석 이전 허용 철회 중 쓰기 실패와 탭 이동·새로고침, 양 저장소 실패 메시지를 로컬 HTTP와 VM으로 검사합니다. 사진은 Commons 원본 픽셀과 사람이 읽을 수 있는 라이선스·권리 경고를 검토하고 날짜·원본·변경 사항·라이선스를 표시합니다. 전체 공개 텍스트·결과·제출 차이는 개인정보·자격증명 관점에서 검사합니다.
 
-## 重要验收状态
-
-当前执行环境无法访问 npm registry，因此无法下载 pnpm 11.23.0，也无法生成可信的 `pnpm-lock.yaml` 或执行用户要求的 `pnpm install --frozen-lockfile -> pnpm check -> pnpm build` 完整联网验收。
-
-因此，本包**没有伪造 `pnpm-lock.yaml`**。拿到可访问 npm registry 的环境后，应先执行一次依赖解析并生成锁文件，再按 README 中的干净环境步骤完成最终 CI 验收。
-
-除这一受网络限制的锁文件/安装验收项外，当前项目目录中的源码、图片、图标、法律页面、配置与说明均已一并打包。
+소스·HTML·HTTP·VM 검사는 실제 모바일 브라우저 시각 및 생산 검증을 대체하지 않습니다. 실제 도메인·Cloudflare 빌드와 모바일 가독성·동작은 게시 담당자가 별도로 확인해야 합니다. 로컬 성공은 배포 완료를 뜻하지 않습니다.
