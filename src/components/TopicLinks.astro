@@ -1,0 +1,35 @@
+---
+import { TOPICS, TOPIC_GROUP_ORDER, TOPIC_GROUP_LABELS, topicsByGroup } from '../data/topics';
+---
+
+<section class="section tinted-section" id="guides">
+  <div class="shell">
+    <p class="eyebrow">명동 야시장 가이드</p>
+    <h2 class="section-title">방문부터 주변까지, 40개 상세 안내</h2>
+    <p class="guide-copy">
+      명동 야시장을 중심으로 명동 먹거리, 교통, 주변 명소, 쇼핑, 여행 동선까지 실용적인 안내를 모았습니다.
+      각 페이지는 하나의 방문 질문에 답합니다.
+    </p>
+    <div class="guide-cluster">
+      {TOPIC_GROUP_ORDER.map((group) => (
+        <div class="cluster-group">
+          <h3 class="cluster-label">{TOPIC_GROUP_LABELS[group]}</h3>
+          <ul class="cluster-list">
+            {topicsByGroup(group).map((t) => (
+              <li><a href={`/${t.slug}/`}>{t.h1}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .guide-cluster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 1.5rem; margin-top: 2.5rem; }
+  .cluster-label { font-size: 1.05rem; font-weight: 850; color: var(--cyan); margin: 0 0 .8rem; letter-spacing: -.01em; }
+  .cluster-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+  .cluster-list a { color: #e7e3f0; text-decoration: none; font-size: .92rem; border-bottom: 1px solid transparent; }
+  .cluster-list a:hover { color: var(--cyan); border-color: rgba(70,230,225,.5); }
+  @media (max-width: 860px) { .guide-cluster { grid-template-columns: 1fr; gap: 1.8rem; } }
+</style>
