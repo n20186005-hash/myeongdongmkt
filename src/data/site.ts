@@ -9,6 +9,9 @@ export function withBrand(pageTitle: string): string {
   return `${pageTitle} | ${SHORT_BRAND}`;
 }
 
+// Compatibility alias used by the existing terms page.
+export const withSiteName = withBrand;
+
 // 실체 사실(홈페이지와 일치, 제3자 Google Maps 스냅샷)
 export const ATTRACTION = {
   name: '명동 야시장',
